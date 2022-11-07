@@ -1,24 +1,18 @@
-// For more information, see https://crawlee.dev/
-import { PlaywrightCrawler, Dataset, CheerioCrawler } from 'crawlee';
+import { PlaywrightCrawler,log } from 'crawlee';
+import { router } from "./routes/routes.js";
 
-// PlaywrightCrawler crawls the web using a headless
-// browser controlled by the Playwright library.
-const crawler = new CheerioCrawler({
-    // Use the requestHandler to process each of the crawled pages.
-    async requestHandler({ request, enqueueLinks, log }) {
-        const title = $('h3').text();
-        log.info(`Title of ${request.loadedUrl} is '${title}'`);
 
-        // Save results as JSON to ./storage/datasets/default
-        await Dataset.pushData({ title, url: request.loadedUrl });
+// This is better set with CRAWLEE_LOG_LEVEL env var
+// or a configuration option. This is just for show 😈
+log.setLevel(log.LEVELS.DEBUG);
 
-        // Extract links from the current page
-        // and add them to the crawling queue.
-        await enqueueLinks();
-    },
-    // Uncomment this option to see the browser window.
-   // headless: false,
+log.debug('Setting up crawler.');
+
+const crawler = new PlaywrightCrawler({
+    requestHandler: router,
+    headless: false
 });
 
-// Add first URL to the queue and start the crawl.
-await crawler.run(['https://old.reddit.com/r/SomebodyMakeThis/']);
+log.debug('Adding requests to the queue.');
+await crawler.addRequests(['https://old.reddit.com/r/SomebodyMakeThis/']);
+await crawler.run();

@@ -1,0 +1,9 @@
+{
+	"id": "fXamRYfmwqcwmUN",
+	"json": "{\"id\":\"fXamRYfmwqcwmUN\",\"url\":\"https://old.reddit.com/r/SomebodyMakeThis/\",\"loadedUrl\":\"https://old.reddit.com/r/SomebodyMakeThis/\",\"uniqueKey\":\"https://old.reddit.com/r/SomebodyMakeThis\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{},\"handledAt\":\"2022-11-06T17:25:31.297Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://old.reddit.com/r/SomebodyMakeThis",
+	"url": "https://old.reddit.com/r/SomebodyMakeThis/"
+}

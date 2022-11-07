@@ -1,0 +1,39 @@
+{
+  "requestsFinished": 9,
+  "requestsFailed": 0,
+  "requestsRetries": 0,
+  "requestsFailedPerMinute": 0,
+  "requestsFinishedPerMinute": 4,
+  "requestMinDurationMillis": 809,
+  "requestMaxDurationMillis": 3748,
+  "requestTotalFailedDurationMillis": 0,
+  "requestTotalFinishedDurationMillis": 10875,
+  "crawlerStartedAt": "2022-11-06T17:25:27.375Z",
+  "crawlerFinishedAt": null,
+  "statsPersistedAt": "2022-11-06T17:27:27.383Z",
+  "crawlerRuntimeMillis": 120219,
+  "crawlerLastStartTimestamp": 1667755527164,
+  "requestRetryHistogram": [
+    9
+  ],
+  "statsId": 0,
+  "requestAvgFailedDurationMillis": null,
+  "requestAvgFinishedDurationMillis": 1208,
+  "requestTotalDurationMillis": 10875,
+  "requestsTotal": 9,
+  "requestsWithStatusCode": {
+    "200": 43
+  },
+  "errors": {},
+  "retryErrors": {
+    "at file:///D:/vscodeprojects/GenericCrawler/src/routes/routes.ts:19:64": {
+      "missing error code": {
+        "TimeoutError": {
+          "locator.textContent: Timeout 30000ms exceeded.": {
+            "count": 21
+          }
+        }
+      }
+    }
+  }
+}
