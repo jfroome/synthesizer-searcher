@@ -5,6 +5,7 @@
     "description": "This is an example of a Crawlee project.",
     "dependencies": {
         "crawlee": "^3.0.0",
+        "crypto": "^1.0.1",
         "playwright": "*"
     },
     "devDependencies": {
@@ -14,7 +15,9 @@
     },
     "scripts": {
         "start": "npm run start:dev",
+        "start-cicada": "npm run start:cicada",
         "start:prod": "node dist/main.js",
+        "start:cicada": "ts-node-esm -T src/mainCicada.ts",
         "start:dev": "ts-node-esm -T src/main.ts",
         "build": "tsc",
         "test": "echo \"Error: oops, the actor has no tests yet, sad!\" && exit 1"
