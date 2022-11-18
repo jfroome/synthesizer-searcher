@@ -50,7 +50,7 @@ router.addHandler('CICADA_DETAILS', async ({ request, page, log }) => {
 
     const listing: Listing = {
         uid: uid,
-        title: await page.locator("h1.product-title-block").textContent(),
+        title: title,
         description: description.join('\n'),
         price: price,
         shipping: null,

@@ -19,6 +19,8 @@
         "start:cicada": "ts-node-esm -T src/mainCicada.ts",
         "start-spaceman": "npm run start:spaceman",
         "start:spaceman": "ts-node-esm -T src/mainSpaceman.ts",
+        "start-kijiji": "npm run start:kijiji",
+        "start:kijiji": "ts-node-esm -T src/mainKijiji.ts",
         "build": "tsc",
         "test": "echo \"Error: oops, the actor has no tests yet, sad!\" && exit 1"
     },

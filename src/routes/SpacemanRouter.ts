@@ -32,12 +32,8 @@ router.addHandler('SM_DETAILS', async ({ request, page, log }) => {
     log.debug(`Extracting data: ${request.url}`);
     log.info("Scraping " + request.url);
 
-
     //await page.locator('div[itemscope]').getAttribute('class').then((value) => { return !value?.includes('outOfStock')});
     var isInStock = await page.locator('.outofstock').count() == 0;
-
-    
-    
 
     //title
     const title = await page.locator('h1.entry-title').textContent();
