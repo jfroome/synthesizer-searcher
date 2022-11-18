@@ -17,6 +17,8 @@
         "start": "npm run start-cicada",
         "start-cicada": "npm run start:cicada",
         "start:cicada": "ts-node-esm -T src/mainCicada.ts",
+        "start-spaceman": "npm run start:spaceman",
+        "start:spaceman": "ts-node-esm -T src/mainSpaceman.ts",
         "build": "tsc",
         "test": "echo \"Error: oops, the actor has no tests yet, sad!\" && exit 1"
     },

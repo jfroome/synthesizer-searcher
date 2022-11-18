@@ -9,4 +9,5 @@ export interface Listing {
   posted: Date | null;
   tags: string[];
   uid: string;
+  inStock: boolean | null;
 }

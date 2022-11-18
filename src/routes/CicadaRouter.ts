@@ -58,7 +58,8 @@ router.addHandler('CICADA_DETAILS', async ({ request, page, log }) => {
         site: "https://cicadasound.ca/",
         url: request.url,
         posted: null,
-        tags: createTokens(title)
+        tags: createTokens(title),
+        inStock: true // if its listed its in stock at this store
     }
     log.debug(`Saving data: ${request.url}`)
     await Dataset.pushData(listing);
