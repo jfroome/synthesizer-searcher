@@ -3,7 +3,6 @@ import { Listing } from "../models/listing.js";
 import { createTokens } from "../util/createTokens.js";
 import { createUID } from "../util/createUID.js";
 
-// https://cicadasound.ca/collections/used
 
 export const router = createPlaywrightRouter();
 router.addHandler('KIJIJI_NEXT',async ({ request, page, enqueueLinks, log }) => {
@@ -31,9 +30,9 @@ router.addHandler('KIJIJI_DETAILS', async ({ request, page, log }) => {
     const description = await (await page.locator('span[itemscope] > div[itemprop="description"]').first().allInnerTexts()).join('\n');
 
     //price
-    const priceString = await page.locator('div[class*="mainColumn"] > div > div > span > span[itemprop="price"]').textContent();
-    const priceNoDollarSign = priceString?.split("$").join().[1] ?? "";
-    const price: number = parseFloat(priceNoDollarSign) ?? 0;
+    // const priceString = await page.locator('div[class*="mainColumn"] > div > div > span > span[itemprop="price"]').textContent();
+    // const priceNoDollarSign = priceString?.split("$").join().[1] ?? "";
+    // const price: number = parseFloat(priceNoDollarSign) ?? 0;
 
     //uid hash
     let seed = request.url;
