@@ -14,15 +14,8 @@
         "typescript": "^4.7.4"
     },
     "scripts": {
-        "start": "echo: which crawler to run?",
-        "start-cicada": "npm run start:cicada",
-        "start:cicada": "ts-node-esm -T src/mainCicada.ts",
-        "start-spaceman": "npm run start:spaceman",
-        "start:spaceman": "ts-node-esm -T src/mainSpaceman.ts",
-        "start-kijiji": "npm run start:kijiji",
-        "start:kijiji": "ts-node-esm -T src/mainKijiji.ts",
-        "start-moog": "npm run start:moog",
-        "start:moog": "ts-node-esm -T src/mainMoog.ts",
+        "start": "npm run start:main",
+        "start:main": "ts-node-esm -T src/main.ts",
         "build": "tsc",
         "test": "echo \"Error: oops, the actor has no tests yet, sad!\" && exit 1"
     },
