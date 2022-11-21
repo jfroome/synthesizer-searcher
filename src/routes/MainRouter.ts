@@ -4,7 +4,47 @@ import { createTokens } from "../util/createTokens.js";
 import { createUID } from "../util/createUID.js";
 import { parsePriceString } from '../util/parsePriceString.js';
 
+import { search } from 'kijiji-scraper';
+
 export const router = createPlaywrightRouter();
+
+router.addHandler('KIJIJI', async ({ log }) => {
+    log.info('Scraping from kijiji api.... this will take a few minutes.');
+    var results = await search(
+        //params
+        {
+            locationId: 1700184,
+            categoryId: 17
+        },
+
+        //options
+        {
+            pageDelayMs: 250,
+            minResults: 1000,
+            scrapeResultDetails: true,
+            resultDetailsDelayMs: 250
+        }
+    )
+    console.log(`${JSON.stringify(results)}`)
+    let listings = results.map(jsonData => {
+        return <Listing>{
+            uid: createUID(jsonData.id),
+            title: jsonData.title,
+            description: jsonData.description,
+            price: jsonData.attributes.priceNoDollarSign,
+            shipping: null,
+            currency: "CAD",
+            site: "https://kijiji.ca/",
+            url: jsonData.url,
+            posted: jsonData.date,
+            tags: createTokens(jsonData.title),
+            inStock: true // if its listed its in stock at this store
+        }
+    });
+    await Dataset.pushData(listings);
+});
+
+
 
 // Cicada
 router.addHandler('CICADA_NEXT', async ({ request, page, enqueueLinks, log }) => {
@@ -65,7 +105,6 @@ router.addHandler('CICADA_DETAILS', async ({ request, page, log }) => {
 });
 
 // moog
-
 router.addHandler('MOOG_NEXT', async ({ request, enqueueLinks, log }) => {
     log.info("Crawling " + request.url);
     await enqueueLinks({
@@ -113,12 +152,13 @@ router.addHandler('MOOG_DETAILS', async ({ request, page, log }) => {
     await Dataset.pushData(listing);
 });
 
+// spaceman
 router.addHandler('SM_NEXT', async ({ request, page, enqueueLinks, log }) => {
     log.info("Crawling " + request.url);
     if (!request.url.includes('page')) {
         await page.waitForSelector('ul.page-numbers');
         let pages = await page.locator('li > a:not(.next).page-numbers');
-        var maxPage = parseInt(await (await pages.last().allInnerTexts()).join()) ?? 0;
+        let maxPage = parseInt(await (await pages.last().allInnerTexts()).join()) ?? 0;
         let urls: string[] = [];
         for (let i = 2; i <= maxPage; i++) {
             urls.push('https://www.spacemanmusic.com/shop/page/' + i + '/');
@@ -140,7 +180,7 @@ router.addHandler('SM_DETAILS', async ({ request, page, log }) => {
     log.info("Scraping " + request.url);
 
     //await page.locator('div[itemscope]').getAttribute('class').then((value) => { return !value?.includes('outOfStock')});
-    var isInStock = await page.locator('.outofstock').count() == 0;
+    let isInStock = await page.locator('.outofstock').count() == 0;
 
     //title
     const title = await page.locator('h1.entry-title').textContent();
