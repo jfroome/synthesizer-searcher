@@ -3,8 +3,8 @@ import { Listing } from "../models/listing.js";
 import { createTokens } from "../util/createTokens.js";
 import { createUID } from "../util/createUID.js";
 import { parsePriceString } from '../util/parsePriceString.js';
-
 import { search } from 'kijiji-scraper';
+import { QueueManager } from "../queueManager.js";
 
 export const router = createPlaywrightRouter();
 
@@ -42,6 +42,7 @@ router.addHandler('KIJIJI', async ({ log }) => {
         }
     });
     await Dataset.pushData(listings);
+    await QueueManager.flush();
 });
 
 
@@ -102,6 +103,7 @@ router.addHandler('CICADA_DETAILS', async ({ request, page, log }) => {
     }
     log.debug(`Saving data: ${request.url}`)
     await Dataset.pushData(listing);
+    await QueueManager.flush();
 });
 
 // moog
@@ -150,6 +152,7 @@ router.addHandler('MOOG_DETAILS', async ({ request, page, log }) => {
     }
     log.info(`Saving data: ${request.url}`)
     await Dataset.pushData(listing);
+    await QueueManager.flush();
 });
 
 // spaceman
@@ -214,4 +217,5 @@ router.addHandler('SM_DETAILS', async ({ request, page, log }) => {
     }
     log.debug(`Saving data: ${request.url}`)
     await Dataset.pushData(listing);
+    await QueueManager.flush();
 });
