@@ -1,5 +1,5 @@
 
-export function parsePriceString(currency:String | null){
+export function parsePriceString(currency: string | null){
     if(currency){
         return Number(currency.replace(/[^0-9.-]+/g,""));
     }else{

@@ -11,10 +11,10 @@ const crawler = new PlaywrightCrawler({
 log.debug('Adding requests to the queue.');
 await crawler.addRequests(
     [
-        {
-            label: 'CICADA_NEXT',
-            url: 'https://cicadasound.ca/collections/used'
-        },
+        // {
+        //     label: 'CICADA_NEXT',
+        //     url: 'https://cicadasound.ca/collections/used'
+        // },
         // {
         //     label: 'SM_NEXT',
         //     url: 'https://www.spacemanmusic.com/shop/'
@@ -23,10 +23,11 @@ await crawler.addRequests(
         //     label: 'MOOG_NEXT',
         //     url: 'https://moogaudio.com/collections/sales'
         // }
-        // ,
-        // {
-        //     label: 'KIJIJI',
-        //     url: 'https://www.kijiji.ca/'
-        // }
+        //,
+        {
+            label: 'KIJIJI',
+            url: 'https://www.kijiji.ca/'
+        }
     ]);
 await crawler.run();
+await QueueManager.flush();

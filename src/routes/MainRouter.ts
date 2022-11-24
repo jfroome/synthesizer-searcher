@@ -14,14 +14,14 @@ router.addHandler('KIJIJI', async ({ log }) => {
         //params
         {
             locationId: 1700184,
-            categoryId: 17
+            categoryId: 17,
+            priceType: "SPECIFIED_AMOUNT"
         },
 
         //options
         {
             pageDelayMs: 250,
             minResults: 1000,
-            scrapeResultDetails: true,
             resultDetailsDelayMs: 250
         }
     )
@@ -31,7 +31,7 @@ router.addHandler('KIJIJI', async ({ log }) => {
             uid: createUID(jsonData.id),
             title: jsonData.title,
             description: jsonData.description,
-            price: jsonData.attributes.priceNoDollarSign,
+            price: jsonData.attributes.price,
             shipping: null,
             currency: "CAD",
             site: "https://kijiji.ca/",
@@ -42,7 +42,6 @@ router.addHandler('KIJIJI', async ({ log }) => {
         }
     });
     await Dataset.pushData(listings);
-    await QueueManager.flush();
 });
 
 
@@ -103,7 +102,6 @@ router.addHandler('CICADA_DETAILS', async ({ request, page, log }) => {
     }
     log.debug(`Saving data: ${request.url}`)
     await Dataset.pushData(listing);
-    await QueueManager.flush();
 });
 
 // moog
@@ -152,7 +150,6 @@ router.addHandler('MOOG_DETAILS', async ({ request, page, log }) => {
     }
     log.info(`Saving data: ${request.url}`)
     await Dataset.pushData(listing);
-    await QueueManager.flush();
 });
 
 // spaceman
@@ -217,5 +214,4 @@ router.addHandler('SM_DETAILS', async ({ request, page, log }) => {
     }
     log.debug(`Saving data: ${request.url}`)
     await Dataset.pushData(listing);
-    await QueueManager.flush();
 });
