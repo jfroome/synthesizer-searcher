@@ -1,31 +1,32 @@
-import { createPlaywrightRouter, Dataset } from 'crawlee';
+import { createPlaywrightRouter, Dataset, sleep } from 'crawlee';
 import { Listing } from "../models/listing.js";
 import { createTokens } from "../util/createTokens.js";
 import { createUID } from "../util/createUID.js";
 import { parsePriceString } from '../util/parsePriceString.js';
 import { search } from 'kijiji-scraper';
-import { QueueManager } from "../queueManager.js";
 
 export const router = createPlaywrightRouter();
 
 router.addHandler('KIJIJI', async ({ log }) => {
-    log.info('Scraping from kijiji api.... this will take a few minutes.');
+    log.info('Sending request to kijiji api.... this will take a few minutes.');
     var results = await search(
         //params
         {
             locationId: 1700184,
             categoryId: 17,
-            priceType: "SPECIFIED_AMOUNT"
+            priceType: "SPECIFIED_AMOUNT",
+            q: "synthesizer synth"
+            //keywords: "synth synthesizer"
         },
 
         //options
         {
             pageDelayMs: 250,
-            minResults: 1000,
+            minResults: 100,
             resultDetailsDelayMs: 250
         }
     )
-    console.log(`${JSON.stringify(results)}`)
+    log.info('Received response from kijiji api.');
     let listings = results.map(jsonData => {
         return <Listing>{
             uid: createUID(jsonData.id),
@@ -43,8 +44,6 @@ router.addHandler('KIJIJI', async ({ log }) => {
     });
     await Dataset.pushData(listings);
 });
-
-
 
 // Cicada
 router.addHandler('CICADA_NEXT', async ({ request, page, enqueueLinks, log }) => {
@@ -81,10 +80,14 @@ router.addHandler('CICADA_DETAILS', async ({ request, page, log }) => {
     const dataProductJsonString = await page.locator('script[data-product-json]').textContent();
     let dataProductJson = "";
     let id;
+    let postedString: any;
     if (dataProductJsonString != null) {
         dataProductJson = JSON.parse(dataProductJsonString);
         id = dataProductJson['id' as keyof string];
+        postedString = dataProductJson['created_at' as keyof string];
     }
+
+    let posted_date = new Date(Date.parse(postedString));
     let seed = request.url + id;
 
     const listing: Listing = {
@@ -96,7 +99,7 @@ router.addHandler('CICADA_DETAILS', async ({ request, page, log }) => {
         currency: "CAD",
         site: "https://cicadasound.ca/",
         url: request.url,
-        posted: null,
+        posted: posted_date,
         tags: createTokens(title),
         inStock: true // if its listed its in stock at this store
     }
@@ -105,16 +108,28 @@ router.addHandler('CICADA_DETAILS', async ({ request, page, log }) => {
 });
 
 // moog
-router.addHandler('MOOG_NEXT', async ({ request, enqueueLinks, log }) => {
+router.addHandler('MOOG_NEXT', async ({ request, page, enqueueLinks, log }) => {
     log.info("Crawling " + request.url);
-    await enqueueLinks({
-        selector: 'a.pagination__next.link',
-        label: 'MOOG_NEXT'
-    })
+    page.locator('div.product-item > a:visible.product-item__title.text--strong.link');
+
+    if (!request.url.includes('?page')) {
+        let pages = await page.locator('div.pagination__nav > a:not(.is-active).pagination__nav-item.link');
+        let maxPage = parseInt(await pages.last().textContent() ?? "0");
+        const urls: string[] = [];
+        for (let i = 2; i <= maxPage; i++) {
+            urls.push(`https://moogaudio.com/collections/sales?page=${i}&q=synth`);
+        }
+
+        await enqueueLinks({
+            urls: urls,
+            label: 'MOOG_NEXT',
+        })
+    }
+
     await enqueueLinks({
         selector: 'a.product-item__title.text--strong.link',
         label: 'MOOG_DETAILS'
-    })
+    });
 });
 
 router.addHandler('MOOG_DETAILS', async ({ request, page, log }) => {
@@ -161,7 +176,7 @@ router.addHandler('SM_NEXT', async ({ request, page, enqueueLinks, log }) => {
         let maxPage = parseInt(await (await pages.last().allInnerTexts()).join()) ?? 0;
         let urls: string[] = [];
         for (let i = 2; i <= maxPage; i++) {
-            urls.push('https://www.spacemanmusic.com/shop/page/' + i + '/');
+            urls.push('https://www.spacemanmusic.com/shop/keyboards/page/' + i + '/');
         }
         await enqueueLinks({
             urls: urls,
