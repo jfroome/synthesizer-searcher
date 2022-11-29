@@ -206,7 +206,8 @@ router.addHandler('SM_DETAILS', async ({ request, page, log }) => {
     //price
     const priceString = await page.locator('p.price').allInnerTexts();
     const priceNoDollarSign = priceString?.join().split("$")[1] ?? "";
-    const price: number = parseFloat(priceNoDollarSign);
+    console.log(priceNoDollarSign);
+    const price: number = parsePriceString(priceNoDollarSign);
 
     //uid hash
     const id = await page.locator('div[itemscope][id*="product"]').getAttribute('id');

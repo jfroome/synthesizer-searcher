@@ -6,28 +6,28 @@ log.debug('Setting up crawler.');
 const crawler = new PlaywrightCrawler({
     // maxRequestsPerCrawl: 1000,
     requestHandler: router,
-    headless: true,
+    headless: false,
 });
 log.debug('Adding requests to the queue.');
 await crawler.addRequests(
     [   
         
-        {
-            label: 'CICADA_NEXT',
-            url: 'https://cicadasound.ca/collections/used'
-        },
+        // {
+        //     label: 'CICADA_NEXT',
+        //     url: 'https://cicadasound.ca/collections/used'
+        // },
         {
             label: 'SM_NEXT',
             url: 'https://www.spacemanmusic.com/shop/keyboards/'
         },
-        {
-            label: 'MOOG_NEXT',
-            url: 'https://moogaudio.com/collections/sales?q=synth'
-        }, 
-        {
-            label: 'KIJIJI',
-            url: 'https://www.kijiji.ca/'
-        }
+        // {
+        //     label: 'MOOG_NEXT',
+        //     url: 'https://moogaudio.com/collections/sales?q=synth'
+        // }, 
+        // {
+        //     label: 'KIJIJI',
+        //     url: 'https://www.kijiji.ca/'
+        // }
     ]);
 await crawler.run();
 await QueueManager.flush();  
