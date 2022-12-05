@@ -5,4 +5,4 @@ This app crawls local music stores and kijiji and collects listings of synthesiz
 
 Planned future functionality:
 
-Add facebook marketplace and reverb.com integration.
+Add facebook marketplace / reverb.com / ebay integration.
