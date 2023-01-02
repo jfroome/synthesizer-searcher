@@ -9,9 +9,10 @@ const crawler = new PlaywrightCrawler({
     headless: true,
 });
 log.debug('Adding requests to the queue.');
+
+await crawler.addRequests(await QueueManager.getExistingLinks());
 await crawler.addRequests(
     [   
-        
         {
             label: 'CICADA_NEXT',
             url: 'https://cicadasound.ca/collections/used'

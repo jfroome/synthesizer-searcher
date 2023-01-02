@@ -1,4 +1,5 @@
 import request from 'request';
+import fetch from 'node-fetch';
 import path from 'path';
 import fs from 'fs';
 import jsonfile from 'jsonfile';
@@ -37,9 +38,9 @@ export module QueueManager {
       console.log(exception);
     }
   }
-  // export async function getExistingLinks(): Promise<string[]> {
-  //   return getLinks();
-  // }
+  export async function getExistingLinks(): Promise<string[]> {
+    return getLinks();
+  }
 }
 
 
@@ -70,30 +71,44 @@ async function uploadListing(jsonBody: String): Promise<boolean> {
   return false;
 }
 
-// async function getLinks(): Promise<any[]> {
-//   let links: any[] = [];
-//   try {
-//     await request.post(
-//       {
-//         url: 'http://localhost:3000/api/getLinks',
-//         method: 'GET'
-//       }, (response) => {
-//         response.body.map((listing:Listing)=>{
-//           switch(listing.site){
-//             case "https://spacemanmusic.com/":
-//               break;
-//             case ""
+async function getLinks(): Promise<any[]> {
+  const links: any[] = [];
+  try {
+    const response = await fetch('http://localhost:3000/api/getLinks');
+    const data = await response.json()
+    //@ts-ignore
 
-//           }
-//           links.push({
-            
-//           });
-//         })
-//       }
-//     );
-//   } catch (exception) {
-//     console.log(exception);
-//   }
-//   return links;
-// }
+    data.links.map((url) => {
+      //@ts-ignore
+      var hostname = new URL(url).hostname;
+      switch (hostname) {
+        case "www.spacemanmusic.com":
+          links.push({
+            url: url,
+            label: 'SM_DETAILS'
+          });
+          break;
+        case "moogaudio.com":
+          links.push({
+            url: url,
+            label: 'MOOG_DETAILS'
+          });
+          break;
+        case "cicadasound.ca":
+          links.push({
+            url: url,
+            label: 'CICADA_DETAILS'
+          });
+          break;
+        case "www.kijiji.ca":
+          return;
+        default: return;
+      }
+    });
+  } catch (exception) {
+    console.log(exception);
+  }
+  console.log(links);
+  return links;
+}
 

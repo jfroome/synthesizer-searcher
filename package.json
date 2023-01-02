@@ -10,6 +10,7 @@
         "fs": "^0.0.1-security",
         "jsonfile": "^6.1.0",
         "kijiji-scraper": "^6.3.0",
+        "node-fetch": "^3.3.0",
         "npm": "^9.1.2",
         "path": "^0.12.7",
         "playwright": "*",

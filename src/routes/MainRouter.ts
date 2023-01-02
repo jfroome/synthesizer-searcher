@@ -134,37 +134,47 @@ router.addHandler('MOOG_NEXT', async ({ request, page, enqueueLinks, log }) => {
 
 router.addHandler('MOOG_DETAILS', async ({ request, page, log }) => {
     log.info("Scraping " + request.url);
+    try{
+        //title
+        const title = await page.locator('h1.product-meta__title.heading').textContent();
 
-    //title
-    const title = await page.locator('h1.product-meta__title.heading').textContent();
+        //description
+        const description = await page.locator('div.rte.text--pull').allInnerTexts();
 
-    //description
-    const description = await page.locator('div.rte.text--pull').allInnerTexts();
+        //price
+        const priceString = await page.locator('div.price-list > span.price.price--highlight').first().textContent();
 
-    //price
-    const priceString = await page.locator('div.price-list > span.price.price--highlight').first().textContent();
+        //uid hash
+        const seed = await page.locator('div.product-meta > #ssw-avg-rate-profile-html').getAttribute('data-product-id');
 
-    //uid hash
-    const seed = await page.locator('div.product-meta > #ssw-avg-rate-profile-html').getAttribute('data-product-id');
+        //in stock
+        const inStock = await page.locator('span.product-form__info-title.text--strong.with-status-colour').first().textContent();
 
-    //in stock
-    const inStock = await page.locator('span.product-form__info-title.text--strong.with-status-colour').first().textContent();
-
-    const listing: Listing = {
-        uid: createUID(seed),
-        title: title,
-        description: description.join('\n'),
-        price: parsePriceString(priceString),
-        shipping: null,
-        currency: "CAD",
-        site: "https://moogaudio.com/",
-        url: request.url,
-        posted: null,
-        tags: createTokens(title),
-        inStock: inStock == "In Stock"
+        const listing: Listing = {
+            uid: createUID(seed),
+            title: title,
+            description: description.join('\n'),
+            price: parsePriceString(priceString),
+            shipping: null,
+            currency: "CAD",
+            site: "https://moogaudio.com/",
+            url: request.url,
+            posted: null,
+            tags: createTokens(title),
+            inStock: inStock === "In Stock"
+        }
+        log.info(`Saving data: ${request.url}`)
+        await Dataset.pushData(listing);                                        
+    } 
+    catch(exception){
+        // @ts-ignore
+        const listing: Listing = {
+            url: request.url,
+            inStock: false
+        }
+        log.info(`Saving data: ${request.url}`)
+        await Dataset.pushData(listing); 
     }
-    log.info(`Saving data: ${request.url}`)
-    await Dataset.pushData(listing);
 });
 
 // spaceman
