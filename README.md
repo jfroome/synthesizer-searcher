@@ -1,9 +1,8 @@
-# Getting started with Crawlee
+# Used-music-gear-finder
 
-This example uses `PlaywrightCrawler` to recursively crawl https://crawlee.dev using the browser automation library [Playwright](https://playwright.dev).
 
-You can find more examples and documentation at the following links:
+This app crawls local music stores and kijiji and collects listings of synthesizers and other music gear that I am interested in. It makes use of Crawlee, Playwright and kijiji-scraper to crawl and scrape the data. It stores all of the data in a local storage which is then processed by a Queuemanager and subsequently submitted to a restful API which is connected to my MongoDB backend. 
 
-- [Step-by-step tutorial](https://crawlee.dev/docs/introduction) for Crawlee
-- `PlaywrightCrawler` [API documentation](https://crawlee.dev/api/playwright-crawler/class/PlaywrightCrawler)
-- Other [examples](https://crawlee.dev/docs/examples/playwright-crawler)
+Planned future functionality:
+
+Add facebook marketplace / reverb.com / ebay integration.
