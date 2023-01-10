@@ -6,7 +6,7 @@ log.debug('Setting up crawler.');
 const crawler = new PlaywrightCrawler({
     // maxRequestsPerCrawl: 1000,
     requestHandler: router,
-    headless: false,
+    headless: true,
 });
 log.debug('Adding requests to the queue.');
 
