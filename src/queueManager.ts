@@ -41,6 +41,29 @@ export module QueueManager {
   export async function getExistingLinks(): Promise<string[]> {
     return getLinks();
   }
+  export async function markAsSold(url:string){
+    console.log("Listing was detected as sold:" + url)
+    try {
+      if (url !== null) {
+        await request.post(
+          {
+            url: 'http://localhost:3000/api/listing/sold/post',
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: {"url": url},
+            json: true
+          }, (error) => {
+            if (error) {
+              console.log(error);
+            }
+          }
+        )
+      }
+    }
+    catch (exception) {
+      console.log(exception);
+    }
+  }
 }
 
 
@@ -49,7 +72,7 @@ async function uploadListing(jsonBody: String): Promise<boolean> {
     if (jsonBody != null) {
       await request.post(
         {
-          url: 'http://localhost:3000/api/post',
+          url: 'http://localhost:3000/api/listing/post',
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: jsonBody,
@@ -74,7 +97,7 @@ async function uploadListing(jsonBody: String): Promise<boolean> {
 async function getLinks(): Promise<any[]> {
   const links: any[] = [];
   try {
-    const response = await fetch('http://localhost:3000/api/getLinks');
+    const response = await fetch('http://localhost:3000/api/links/get');
     const data = await response.json()
     //@ts-ignore
 

@@ -4,6 +4,7 @@ import { createTokens } from "../util/createTokens.js";
 import { createUID } from "../util/createUID.js";
 import { parsePriceString } from '../util/parsePriceString.js';
 import { search } from 'kijiji-scraper';
+import { QueueManager } from "../queueManager.js";
 
 export const router = createPlaywrightRouter();
 
@@ -64,6 +65,12 @@ router.addHandler('CICADA_NEXT', async ({ request, page, enqueueLinks, log }) =>
 });
 
 router.addHandler('CICADA_DETAILS', async ({ request, page, log }) => {
+    if ((await page.title()).includes('404')) {
+        // call queuemanager to flag item as sold
+        await QueueManager.markAsSold(request.url);
+        return;
+    }
+
     log.debug(`Extracting data: ${request.url}`);
     log.info("Scraping " + request.url);
 
@@ -135,6 +142,12 @@ router.addHandler('MOOG_NEXT', async ({ request, page, enqueueLinks, log }) => {
 router.addHandler('MOOG_DETAILS', async ({ request, page, log }) => {
     log.info("Scraping " + request.url);
     try{
+        if ((await page.title()).includes('404')) {
+            // call queuemanager to flag item as sold
+            await QueueManager.markAsSold(request.url);
+            return;
+        }
+
         //title
         const title = await page.locator('h1.product-meta__title.heading').textContent();
 
@@ -201,6 +214,11 @@ router.addHandler('SM_NEXT', async ({ request, page, enqueueLinks, log }) => {
 });
 
 router.addHandler('SM_DETAILS', async ({ request, page, log }) => {
+    if ((await page.title()).includes('Page not found')) {
+        // call queuemanager to flag item as sold
+        await QueueManager.markAsSold(request.url);
+        return;
+    }
     log.debug(`Extracting data: ${request.url}`);
     log.info("Scraping " + request.url);
 
