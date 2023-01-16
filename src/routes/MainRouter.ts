@@ -5,6 +5,7 @@ import { createUID } from "../util/createUID.js";
 import { parsePriceString } from '../util/parsePriceString.js';
 import { search } from 'kijiji-scraper';
 import { QueueManager } from "../queueManager.js";
+import { Locator } from 'playwright';
 
 export const router = createPlaywrightRouter();
 
@@ -44,6 +45,18 @@ router.addHandler('KIJIJI', async ({ log }) => {
         }
     });
     await Dataset.pushData(listings);
+});
+
+router.addHandler('KIJIJI_STOCK_CHECK', async ({ request, page }) => {
+    if ((await page.title()).includes('Page Not Found') || 
+         page.getByText('Hmm... Apparently this page no longer exists.').textContent() !== null ||
+         page.getByText("Oops... Too late! This listing was so awesome that it\'s already gone. Check out other similar ads in your area").textContent() !== null ||
+         page.getByText("No Longer Available -").textContent() !== null
+         ) {
+        // call queuemanager to flag item as sold
+        await QueueManager.markAsSold(request.url);
+        return;
+    }
 });
 
 // Cicada
@@ -234,7 +247,7 @@ router.addHandler('SM_DETAILS', async ({ request, page, log }) => {
     //price
     const priceString = await page.locator('p.price').allInnerTexts();
     const priceNoDollarSign = priceString?.join().split("$")[1] ?? "";
-    console.log(priceNoDollarSign);
+    //console.log(priceNoDollarSign);
     const price: number = parsePriceString(priceNoDollarSign);
 
     //uid hash
@@ -259,3 +272,7 @@ router.addHandler('SM_DETAILS', async ({ request, page, log }) => {
     log.debug(`Saving data: ${request.url}`)
     await Dataset.pushData(listing);
 });
+
+function expect(arg0: Locator) {
+    throw new Error('Function not implemented.');
+}

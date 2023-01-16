@@ -41,24 +41,22 @@ export module QueueManager {
   export async function getExistingLinks(): Promise<string[]> {
     return getLinks();
   }
-  export async function markAsSold(url:string){
-    console.log("Listing was detected as sold:" + url)
+  export async function markAsSold(url: string) {
+    console.log("Listing was detected as sold: " + url)
     try {
-      if (url !== null) {
-        await request.post(
-          {
-            url: 'http://localhost:3000/api/listing/sold/post',
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: {"url": url},
-            json: true
-          }, (error) => {
-            if (error) {
-              console.log(error);
-            }
+      await request.post(
+        {
+          url: 'http://localhost:3000/api/listing/stock/post',
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: { "url": url },
+          json: true
+        }, (error) => {
+          if (error) {
+            console.log(error);
           }
-        )
-      }
+        }
+      )
     }
     catch (exception) {
       console.log(exception);
@@ -124,6 +122,10 @@ async function getLinks(): Promise<any[]> {
           });
           break;
         case "www.kijiji.ca":
+          links.push({
+            url: url,
+            label: 'KIJIJI_STOCK_CHECK'
+          });
           return;
         default: return;
       }

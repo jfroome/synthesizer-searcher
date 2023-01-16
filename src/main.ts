@@ -4,10 +4,13 @@ import { QueueManager } from "./queueManager.js";
 log.setLevel(log.LEVELS.INFO);
 log.debug('Setting up crawler.');
 const crawler = new PlaywrightCrawler({
-    // maxRequestsPerCrawl: 1000,
+    maxRequestRetries: 0,
+    navigationTimeoutSecs: 5,
+    requestHandlerTimeoutSecs: 5,
     requestHandler: router,
     headless: true,
 });
+
 log.debug('Adding requests to the queue.');
 
 await crawler.addRequests(await QueueManager.getExistingLinks());
